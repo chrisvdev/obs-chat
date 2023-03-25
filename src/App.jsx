@@ -4,7 +4,7 @@ import useTwitchParams from "./hooks/useTwitchParams";
 
 export default function App() {
   const twitchParams = useTwitchParams();
-  const [logged, setLogged] = useState(false)
+  const [logged, setLogged] = useState(false);
   const { sendMessage, lastMessage, readyState } = useWebSocket(
     "ws://irc-ws.chat.twitch.tv:80",
     {
@@ -13,19 +13,29 @@ export default function App() {
     }
   );
 
-  useEffect(()=>{
-    if (twitchParams.access_token && !logged && (readyState === ReadyState.OPEN)) {
-      sendMessage('CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands');
+  useEffect(() => {
+    console.log(`Twitch token:${Boolean(twitchParams.access_token)}`)
+      console.log(`logged:${!logged}`)
+      console.log(`open:${readyState === ReadyState.OPEN}`)
+    if (
+      twitchParams.access_token &&
+      !logged &&
+      readyState === ReadyState.OPEN
+    ) {
+      sendMessage(
+        "CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands"
+      );
       sendMessage(`PASS oauth:${twitchParams.access_token}`);
-      sendMessage('NICK ChrisVDev_OBS-Chat');
+      sendMessage("NICK ChrisVDev_OBS-Chat");
+      sendMessage("JOIN #chrisvdev");
+      console.log("mande el mensaje");
+      setLogged(true);
     }
-  },[logged])
+  }, [logged,readyState]);
 
-  useEffect(()=>{
-    if (readyState!==ReadyState.OPEN) setLogged(false)
-  },[readyState])
-
-  useEffect(()=>(console.log(lastMessage)),[lastMessage])
+  useEffect(() => {
+    if (readyState !== ReadyState.OPEN) setLogged(false);
+  }, [readyState]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: "Connecting",
@@ -35,14 +45,13 @@ export default function App() {
     [ReadyState.UNINSTANTIATED]: "Uninstantiated",
   }[readyState];
 
-  useEffect(() => console.log(lastMessage), [lastMessage]);
+  useEffect(
+    () => console.log(lastMessage ? lastMessage.data : "aun no conectado")
+  );
 
   return (
     <div className="text-center mt-10 font-bold text-7xl">
       {connectionStatus}
-      {Object.keys(twitchParams).map((key) => (
-        <p key={key}>{`key: ${key}, value: ${twitchParams[key]}`}</p>
-      ))}
     </div>
   );
 }
