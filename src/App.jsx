@@ -1,58 +1,38 @@
-import React, { useState, useEffect } from "react";
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import useTwitchParams from "./hooks/useTwitchParams";
+import React from "react";
+import useTwitchChat from "./hooks/useTwitchChat";
 
 export default function App() {
-  const twitchParams = useTwitchParams();
-  const [logged, setLogged] = useState(false);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(
-    "ws://irc-ws.chat.twitch.tv:80",
-    {
-      share: true,
-      shouldReconnect: () => true,
-    }
-  );
+  const chat = useTwitchChat();
+  const filterMsgText = (rawMsg) => {
+    return rawMsg.slice(2, rawMsg.length);
+  };
 
-  useEffect(() => {
-    console.log(`Twitch token:${Boolean(twitchParams.access_token)}`)
-      console.log(`logged:${!logged}`)
-      console.log(`open:${readyState === ReadyState.OPEN}`)
-    if (
-      twitchParams.access_token &&
-      !logged &&
-      readyState === ReadyState.OPEN
-    ) {
-      sendMessage(
-        "CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands"
-      );
-      sendMessage(`PASS oauth:${twitchParams.access_token}`);
-      sendMessage("NICK ChrisVDev_OBS-Chat");
-      sendMessage("JOIN #chrisvdev");
-      console.log("mande el mensaje");
-      setLogged(true);
-    }
-  }, [logged,readyState]);
-
-  useEffect(() => {
-    if (readyState !== ReadyState.OPEN) setLogged(false);
-  }, [readyState]);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
-  useEffect(
-    () => console.log(lastMessage ? lastMessage.data : "aun no conectado")
-  );
+  console.log(chat.messageCue);
 
   return (
-    <div className="text-center mt-10 font-bold text-7xl">
-      {connectionStatus}
-    </div>
+    <>
+      <div className="flex flex-col-reverse justify-center items-end">
+        {chat.messageCue.map((msg, i) => (
+          <div key={`msg_${i}`} className="flex justify-cente items-center py-1 px-2 m-1 rounded bg-zinc-800 border border-amber-400">
+            <p
+              style={{
+                color: msg.color
+                  ? msg.color
+                  : `rgb(${Math.ceil(Math.random() * 128) + 128},${
+                      Math.ceil(Math.random() * 128) + 128
+                    },${Math.ceil(Math.random() * 128) + 128})`,
+              }}
+              className="mr-2"
+            >
+              {msg["display-name"]}:
+            </p>
+            <p className="my-1 text-slate-50" key={`msg_${i}`}>
+              {filterMsgText((msg.vip || msg["user-type"]).split(":"))}
+            </p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
