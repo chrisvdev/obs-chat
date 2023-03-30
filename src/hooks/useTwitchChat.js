@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useURLParams from "./useURLParams";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-const MSG_AMOUNT = 11
+const MSG_AMOUNT = 13
 
 export default function useTwitchChat() {
     const [messages, setMessages] = useState([])
@@ -22,9 +22,6 @@ export default function useTwitchChat() {
     }
 
     useEffect(() => {
-        console.log(`Twitch token:${Boolean(params.access_token)}`)
-        console.log(`logged:${!logged}`)
-        console.log(`open:${readyState === ReadyState.OPEN}`)
         if (
             params.access_token &&
             !logged &&
@@ -36,7 +33,6 @@ export default function useTwitchChat() {
             sendMessage(`PASS oauth:${params.access_token}`);
             sendMessage("NICK ChrisVDev_OBS-Chat");
             sendMessage("JOIN #chrisvdev");
-            console.log("mande el mensaje");
             setLogged(true);
         }
     }, [logged, webSocket]);
@@ -48,11 +44,17 @@ export default function useTwitchChat() {
     useEffect(() => {
         if (readyState === ReadyState.OPEN && logged) {
             const mkMsgObj = (rawMsg) => {
-                const objMsg = {}
-                rawMsg.split(";").map((element) => (objMsg[element.split('=')[0]] = element.split('=')[1]))
+                const bomb = setTimeout(() => {
+                    setMessages((previous) => previous.filter((msg) => msg.autoDestroy !== bomb))
+                }, 10000)
+                const [data,msg] = rawMsg.split("PRIVMSG #chrisvdev :")
+                const objMsg = { autoDestroy: bomb, msg }
+                data.split(";").map((element) => (objMsg[element.split('=')[0]] = element.split('=')[1]))
+                console.log(objMsg)
                 return objMsg
             }
-            lastMessage && lastMessage.data.includes("PRIVMSG") && setMessages((previousCue) => [mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))])
+            lastMessage && lastMessage.data.includes("PRIVMSG") &&
+             setMessages((previousCue) => [mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))])
             lastMessage && lastMessage.data.includes("PING") && sendMessage("PONG :tmi.twitch.tv")
         }
     }, [lastMessage])
