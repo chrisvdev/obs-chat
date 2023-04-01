@@ -46,7 +46,7 @@ export default function useTwitchChat() {
             const mkMsgObj = (rawMsg) => {
                 const bomb = setTimeout(() => {
                     setMessages((previous) => previous.filter((msg) => msg.autoDestroy !== bomb))
-                }, 10000)
+                }, 15000)
                 const [data,msg] = rawMsg.split("PRIVMSG #chrisvdev :")
                 const objMsg = { autoDestroy: bomb, msg }
                 data.split(";").map((element) => (objMsg[element.split('=')[0]] = element.split('=')[1]))
