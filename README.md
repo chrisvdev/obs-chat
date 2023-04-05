@@ -1,2 +1,2 @@
 # obs-chat
-A Twitch chat viewer that connects to its API through Websockets, made in React.JS and oriented to implement in Broadcast softwares compatible with Web applications such as OBS or derivatives.
+A Twitch chat viewer made with React for use in OBS or any streaming software capable of using a browser as a source, which, in addition to using the twitch API, uses WebSockets to connect to your IRC server.
