@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useTwitchChat from "./hooks/useTwitchChat";
+import useTwitchBadges from "./hooks/useTwitchBadges";
 import "./app.css";
 
 export default function App() {
   const chat = useTwitchChat();
+  const badges = useTwitchBadges("chrisvdev")
+
+  useEffect(() => {
+    console.log(badges);
+  }, [badges]);
 
   return (
     <>
@@ -52,14 +58,9 @@ TODO:
 Color mod #00AD03
 Color vip #E005B9
 
+Conseguir los datos del usuario (avatar) 🥑✅
+Conseguir las medallas de cada usuario 
+Agregar pato en caso de *quack*
+hacer los estilos
 
-
-https://static-cdn.jtvnw.net/emoticons/v2/${id}/${format}/${theme}/${scale}
-https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_5101a0ff70354ddc83ac4944dc32f25b/default/dark/1.0                                  id del emote  - Format probar con default - scale con 1.0
-https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/1.0 (url a emotes estandar)
-
-https://lenguajejs.com/javascript/peticiones-http/url/
-
-http://localhost:5173/
-http://localhost:5173/
 */

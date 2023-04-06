@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useURLParams from "./useURLParams";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import axios from "axios"
 const CHANNEL = "chrisvdev"
 const MSG_MAX_LENGTH = 150;
 const MSG_AMOUNT = 6
@@ -72,8 +73,13 @@ function _placeEmojis(msg, rawEmotes) {
     return toRender + dot3;
 };
 
+function _getBadges(badgesStr){
+
+}
+
 export default function useTwitchChat() {
     const [messages, setMessages] = useState([])
+    const [users, setUsers] = useState({})
     const [logged, setLogged] = useState(false);
     const params = useURLParams();
     const webSocket = useWebSocket(
@@ -88,6 +94,7 @@ export default function useTwitchChat() {
 
     if (!access_token) {
         client_id && navigation.navigate(`https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`)
+        localStorage.setItem("client_id", client_id)
     }
 
     useEffect(() => {
@@ -127,6 +134,28 @@ export default function useTwitchChat() {
         }
     }, [lastMessage])
 
+    useEffect(() => {
+        const userId = messages[0] && messages[0]["user-id"]
+        const client_id = localStorage.getItem("client_id")
+        if (!users[userId] && userId) {
+            axios({
+                url: `https://api.twitch.tv/helix/users?id=${userId}`,
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${access_token}`,
+                    "Client-Id": client_id
+                }
+            })
+                .then(({ data }) => {
+                    setUsers((users) => {
+                        const newUsers = { ...users }
+                        newUsers[userId] = data.data[0]
+                        return newUsers
+                    })
+                })
+        }
+    }, [messages])
+
     return {
         connectionStatus: {
             [ReadyState.CONNECTING]: "Connecting",
@@ -140,6 +169,7 @@ export default function useTwitchChat() {
             const processed = structuredClone(mssg)
             processed.msg = emotes ? _placeEmojis(msg, emotes) : _filterHTMLTags(msg)
             return processed
-        })
+        }),
+        users
     }
 }
