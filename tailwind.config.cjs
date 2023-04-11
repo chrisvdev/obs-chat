@@ -8,12 +8,14 @@ module.exports = {
     extend: {
       fontFamily: {
         'futura-pt': ['"futura-pt"', 'sans-serif'],
+        'inter': ['"Inter"', 'sans-serif']
       },
       colors: {
         twitch: {
           mod: "#00AD03",
           vip: "#E005B9",
-          sub: "#8205B4"
+          sub: "#8205B4",
+          brd: "#E7151E"
         }
       },
       msgShadow: `--tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);

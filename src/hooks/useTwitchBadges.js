@@ -1,6 +1,15 @@
+import { createElement } from "react";
 import { useState, useEffect } from "react";
 import useURLParams from "./useURLParams";
 import axios from "axios";
+
+function _proceseBadges(data) {
+    return (badges) => { return [...badges, ...data.data.map(({ set_id, versions }) => ({ id: set_id, url: versions[0].image_url_2x }))] }
+}
+
+function _getBadges(badges) {
+    return badges.split(",").map((badge) => (badge.split("/")[0]))
+}
 
 export default function useTwitchBadges(streamer) {
     const { access_token } = useURLParams();
@@ -9,10 +18,6 @@ export default function useTwitchBadges(streamer) {
     const [global, setGlobal] = useState(false)
     const [channel, setChannel] = useState(false)
     const [streamerId, setStreamerId] = useState(undefined)
-    useEffect(()=>console.log(`tengo access_token ${Boolean(access_token)}`),[access_token])
-    useEffect(()=>console.log(`tengo global ${Boolean(global)}`),[global])
-    useEffect(()=>console.log(`tengo channel ${Boolean(channel)}`),[channel])
-    useEffect(()=>console.log(`tengo streamerId ${Boolean(streamerId)}`),[streamerId])
     useEffect(() => {
         if (access_token) {
             if (!streamerId) {
@@ -38,7 +43,7 @@ export default function useTwitchBadges(streamer) {
                     }
                 })
                     .then(({ data }) => {
-                        setBadges((badges) => [...badges, ...data.data.map(({ set_id, versions }) => ({ id: set_id, url: versions.image_url_1x }))])
+                        setBadges(_proceseBadges(data))
                         setGlobal(true)
                     })
             }
@@ -52,12 +57,29 @@ export default function useTwitchBadges(streamer) {
                     }
                 })
                     .then(({ data }) => {
-                        console.log(data)
-                        setBadges((badges) => [...badges, ...data.data.map(({ set_id, versions }) => ({ id: set_id, url: versions[0].image_url_1x }))])
+                        setBadges(_proceseBadges(data))
                         setChannel(true)
                     })
             }
         }
     }, [badges])
-    return badges;
+
+    const _getBadge = (id) => badges.filter((badge) => badge.id === id)[0]
+
+    //const _renderBadge = (id) => `<img class="ml-2 h-6 w-6" src="${badges.filter((badge)=>badge.id===id)[0].url}" alt="${id}" />`
+    const _renderBadge = (id) => _getBadge(id)
+        ? (className) => createElement("img", {className:`z-10 h-5 w-5 ${className}`,  src: `${_getBadge(id).url}`, alt: `${id}` }, null)
+        : undefined
+
+    const makeBadges = (badgesStr) => {
+        const badges = _getBadges(badgesStr)
+        return badges.map((badge) => {
+            console.log(_renderBadge(badge))
+            return _renderBadge(badge)
+        })
+    }
+
+    return makeBadges;
 }
+
+// toDo: Refactorear promise.all() para evitar los estados Flag. Gracias Mayday221

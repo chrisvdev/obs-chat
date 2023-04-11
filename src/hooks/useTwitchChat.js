@@ -18,6 +18,8 @@ function _getEmotes(emotes) {
     });
 }
 
+
+
 function _getTemplate(msg, rawEmotes) {
     const emotes = _getEmotes(rawEmotes);
     let sequence = [];
@@ -73,14 +75,11 @@ function _placeEmojis(msg, rawEmotes) {
     return toRender + dot3;
 };
 
-function _getBadges(badgesStr){
-
-}
-
 export default function useTwitchChat() {
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState({})
     const [logged, setLogged] = useState(false);
+    const [middlewares, setMiddlewares] = useState([])
     const params = useURLParams();
     const webSocket = useWebSocket(
         "ws://irc-ws.chat.twitch.tv:80",
@@ -91,6 +90,20 @@ export default function useTwitchChat() {
     );
     const { sendMessage, lastMessage, readyState } = webSocket;
     const { access_token, client_id } = params;
+
+
+    const _middlewareExecutor = (mssg) => {
+        const { msg, emotes } = mssg
+        let processed = structuredClone(mssg)
+        processed.msg = emotes ? _placeEmojis(msg, emotes) : _filterHTMLTags(msg)
+        users[processed["user-id"]] && (processed["avatar"]=users[processed["user-id"]].profile_image_url)
+        if (middlewares.length) {
+            middlewares.forEach((cb) => {
+                processed = cb(processed)
+            })
+        }
+        return processed
+    }
 
     if (!access_token) {
         client_id && navigation.navigate(`https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`)
@@ -164,12 +177,8 @@ export default function useTwitchChat() {
             [ReadyState.CLOSED]: "Closed",
             [ReadyState.UNINSTANTIATED]: "Uninstantiated",
         }[readyState],
-        messageCue: messages.map((mssg) => {
-            const { msg, emotes } = mssg
-            const processed = structuredClone(mssg)
-            processed.msg = emotes ? _placeEmojis(msg, emotes) : _filterHTMLTags(msg)
-            return processed
-        }),
-        users
+        messageCue: messages.map(_middlewareExecutor),
+        users,
+        use: (cb) => { setMiddlewares((middlewares) => [...middlewares, cb]) }
     }
 }
