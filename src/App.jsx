@@ -30,58 +30,64 @@ export default function App() {
     <>
       <div className="flex flex-col-reverse h-[1080px] justify-start items-en">
         {chat.messageCue.map((msg, i) => {
-          const badges = renderBadges(msg.badges)
+          const badges = renderBadges(msg.badges);
           return (
-          <div className="flex flex-col items-start w-full" key={`msg_${i}`}>
-            {badges[0] && (badges[0]("relative top-24 left-11"))}
-            <div className="flex items-center p-2 rounded-full bg-[#222222] relative left-1 top-9">
-              <img
-                className={`h-12 w-12 rounded-full ${
+            <div className="flex flex-col items-start w-full" key={`msg_${i}`}>
+              {badges[0] && badges[0]("relative top-24 left-11")}
+              <div className="flex items-center p-2 rounded-full bg-[#222222] relative left-1 top-9">
+                <img
+                  className={`h-12 w-12 rounded-full ${
+                    msg.badges.includes("mod")
+                      ? "border-4 border-twitch-mod"
+                      : msg.badges.includes("vip")
+                      ? "border-4 border-twitch-vip"
+                      : "border border-zinc-400"
+                  }`}
+                  src={
+                    msg.quack
+                      ? patos[Math.ceil(Math.random() * 7) - 1]
+                      : msg.avatar
+                  }
+                  alt={`Avatar-${msg["display-name"]}}`}
+                />
+                <span
+                  className="ml-2 font-bold text-lg mr-4"
+                  style={{
+                    color: msg.color
+                      ? msg.color
+                      : `rgb(${Math.ceil(Math.random() * 128) + 128},${
+                          Math.ceil(Math.random() * 128) + 128
+                        },${Math.ceil(Math.random() * 128) + 128})`,
+                  }}
+                >
+                  {msg["display-name"]}
+                </span>
+              </div>
+              <div
+                className={`flex z w-[98%] p-5 mr-4 rounded-3xl rounded-tl-none flex-col justify-end items-center m-1 bg-gradient-to-l from-[#0d1321] to-[#000] ${
                   msg.badges.includes("mod")
                     ? "border-4 border-twitch-mod"
                     : msg.badges.includes("vip")
                     ? "border-4 border-twitch-vip"
                     : "border border-zinc-400"
-                }`}
-                src={
-                  msg.quack
-                    ? patos[Math.ceil(Math.random() * 7) - 1]
-                    : msg.avatar
-                }
-                alt={`Avatar-${msg["display-name"]}}`}
-              />
-              <span
-                className="ml-2 font-bold text-lg mr-4"
-                style={{
-                  color: msg.color
-                    ? msg.color
-                    : `rgb(${Math.ceil(Math.random() * 128) + 128},${
-                        Math.ceil(Math.random() * 128) + 128
-                      },${Math.ceil(Math.random() * 128) + 128})`,
-                }}
+                } `}
               >
-                {msg["display-name"]}
-              </span>
+                <div className="flex self-end h-6">
+                  {badges
+                    .slice(1, badges.length)
+                    .map((badge, i) => badge("", i))}
+                </div>
+                <p
+                  className={`self-start text-slate-50 text-xl text-end flex flex-wrap break-all text-ellipsis font-inter`}
+                  key={`msg_${i}`}
+                  dangerouslySetInnerHTML={{
+                    __html: msg.msg,
+                  }}
+                />
+              </div>
             </div>
-            <div
-              className={`flex z w-[98%] p-5 mr-4 rounded-3xl rounded-tl-none flex-col justify-end items-center m-1 bg-gradient-to-l from-[#0d1321] to-[#000] ${
-                msg.badges.includes("mod")
-                  ? "border-4 border-twitch-mod"
-                  : msg.badges.includes("vip")
-                  ? "border-4 border-twitch-vip"
-                  : "border border-zinc-400"
-              } `}
-            >
-              <p
-                className={`mt-5 self-start text-slate-50 text-xl text-end flex flex-wrap break-all text-ellipsis font-inter`}
-                key={`msg_${i}`}
-                dangerouslySetInnerHTML={{
-                  __html: msg.msg,
-                }}
-              />
-            </div>
-          </div>
-        )})}
+          );
+        })}
       </div>
     </>
   );
