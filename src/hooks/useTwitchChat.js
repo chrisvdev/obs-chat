@@ -49,7 +49,7 @@ function _getTemplate(msg, rawEmotes) {
 
 function _renderEmoji(id) { return `<img class="mx-1 w-8 h-8 aspect-square object-cover" src="https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/2.0"/>` }
 
-function _filterHTMLTags(msg) {
+function _filterHTMLTags(msg) { // obra y gracia de JP__is ❤️
     return msg.replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
 }
