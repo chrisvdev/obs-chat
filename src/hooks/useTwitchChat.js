@@ -80,6 +80,7 @@ export default function useTwitchChat() {
     const [users, setUsers] = useState({})
     const [logged, setLogged] = useState(false);
     const [middlewares, setMiddlewares] = useState([])
+    const [filters, setFilters] = useState([])
     const params = useURLParams();
     const webSocket = useWebSocket(
         "ws://irc-ws.chat.twitch.tv:80",
@@ -96,13 +97,37 @@ export default function useTwitchChat() {
         const { msg, emotes } = mssg
         let processed = structuredClone(mssg)
         processed.msg = emotes ? _placeEmojis(msg, emotes) : _filterHTMLTags(msg)
-        users[processed["user-id"]] && (processed["avatar"]=users[processed["user-id"]].profile_image_url)
+        users[processed["user-id"]] && (processed["avatar"] = users[processed["user-id"]].profile_image_url)
         if (middlewares.length) {
             middlewares.forEach((cb) => {
                 processed = cb(processed)
             })
         }
         return processed
+    }
+
+    const _mkMsgObj = (rawMsg) => {
+        const bomb = setTimeout(() => {
+            setMessages((previous) => previous.filter((msg) => msg.autoDestroy !== bomb))
+        }, 15000)
+        const [data, msg] = rawMsg.split(`PRIVMSG #${CHANNEL} :`)
+        const objMsg = { autoDestroy: bomb, msg }
+        data.split(";").map((element) => (objMsg[element.split('=')[0]] = element.split('=')[1]))
+        return objMsg
+    }
+
+    const _mustBeFiltered = (msg) => {
+        let shouldBeFiltered = false        
+        if (filters.length) {
+            filters.forEach((cb) => {
+                cb(msg) && (shouldBeFiltered=true)
+            })
+        }
+        return shouldBeFiltered
+    }
+
+    const _messageHandler = (previousCue) => {
+        return _mustBeFiltered(_mkMsgObj(lastMessage.data))? previousCue : [_mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))]
     }
 
     if (!access_token) {
@@ -132,17 +157,9 @@ export default function useTwitchChat() {
 
     useEffect(() => {
         if (readyState === ReadyState.OPEN && logged) {
-            const mkMsgObj = (rawMsg) => {
-                const bomb = setTimeout(() => {
-                    setMessages((previous) => previous.filter((msg) => msg.autoDestroy !== bomb))
-                }, 15000)
-                const [data, msg] = rawMsg.split(`PRIVMSG #${CHANNEL} :`)
-                const objMsg = { autoDestroy: bomb, msg }
-                data.split(";").map((element) => (objMsg[element.split('=')[0]] = element.split('=')[1]))
-                return objMsg
-            }
+
             lastMessage && lastMessage.data.includes("PRIVMSG") &&
-                setMessages((previousCue) => [mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))])
+                setMessages(_messageHandler)
             lastMessage && lastMessage.data.includes("PING") && sendMessage("PONG :tmi.twitch.tv")
         }
     }, [lastMessage])
@@ -179,6 +196,7 @@ export default function useTwitchChat() {
         }[readyState],
         messageCue: messages.map(_middlewareExecutor),
         users,
-        use: (cb) => { setMiddlewares((middlewares) => [...middlewares, cb]) }
+        use: (cb) => { setMiddlewares((middlewares) => [...middlewares, cb]) },
+        useFilter: (cb) => { setFilters((filters) => [...filters, cb]) }
     }
 }

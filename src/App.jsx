@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import useTwitchChat from "./hooks/useTwitchChat";
 import useTwitchBadges from "./hooks/useTwitchBadges";
 import patoBotMiddleware from "./middlewares/patoBot";
+import botFilter from "./filters/botFilter";
+import commandsFilter from "./filters/commandsFilter";
 import "./app.css";
 
 function _getOrnament(badges) {
@@ -18,6 +20,8 @@ export default function App() {
   const chat = useTwitchChat();
   useEffect(() => {
     chat.use(patoBotMiddleware);
+    chat.useFilter(botFilter);
+    chat.useFilter(commandsFilter);
   }, []);
 
   const renderBadges = useTwitchBadges("chrisvdev");
@@ -44,7 +48,11 @@ export default function App() {
                     msg.badges
                   )}`}
                 >
-                  <img className="h-11 w-11 rounded-full" src={msg.avatar} />
+                  <img
+                    className="h-11 w-11 rounded-full"
+                    src={msg.quack ? msg.quack : msg.avatar}
+                    onLoad={() => {}}
+                  />
                 </div>
                 <span
                   className="ml-2 font-bold text-lg mr-4"
@@ -100,8 +108,8 @@ Conseguir los datos del usuario (avatar) 🥑✅
 Conseguir las medallas de cada usuario 🥑✅
 Agregar pato en caso de *quack* 🥑✅
 poner el degrade en el Avatar 🥑✅
-eliminar espacio, englobar con un elemento en position absolute al avatar y nick y mover con relative
-solucionar la carga de los avatares (onload)
+eliminar espacio, englobar con un elemento en position absolute al avatar y nick y mover con relative 🥑✅
+solucionar la carga de los avatares (onload) -> En hilo de discord para subir Memes random
 hacer los estilos 
 filtrar mensajes de bots 
 
