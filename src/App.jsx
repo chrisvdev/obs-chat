@@ -19,15 +19,22 @@ export default function App() {
 
   const renderBadges = useTwitchBadges("chrisvdev");
 
-  useEffect(() => console.log(chat.messageCue[0]), [chat]);
+  /* useEffect(() => console.log(chat.messageCue[0]), [chat]); */
 
   // ryonen1: chris fijate este background por defecto: linear-gradient(to top left, #0d1321, #000) y este borde rgba(100,116,139,.2)
   // bg-[#1f1f22]
 
   return (
     <>
-      <div className="flex flex-col-reverse h-[1080px] justify-start items-en">
-        {chat.messageCue.map((msg,i)=><Message key={`msg_${i}`} msg={msg} i={i} renderBadges={renderBadges}/>)}
+      <div className="flex flex-col-reverse h-[100vh] justify-start items-en">
+        {chat.messageCue.map((msg, i) => (
+          <Message
+            key={`msg_${i}`}
+            msg={msg}
+            i={i}
+            renderBadges={renderBadges}
+          />
+        ))}
       </div>
     </>
   );

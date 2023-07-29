@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import useURLParams from "./useURLParams";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import axios from "axios"
+import toTTS from "../lib/tts";
 const CHANNEL = "chrisvdev"
 const MSG_MAX_LENGTH = 150;
 const MSG_AMOUNT = 6
 
-function _getEmotes(emotes) {
+function _getEmotes (emotes) {
     return emotes.split("/").map((emote) => {
         const [id, positions] = emote.split(":");
         const emoteToRender = { id, positions: [] };
@@ -20,7 +21,7 @@ function _getEmotes(emotes) {
 
 
 
-function _getTemplate(msg, rawEmotes) {
+function _getTemplate (msg, rawEmotes) {
     const emotes = _getEmotes(rawEmotes);
     let sequence = [];
     const template = [];
@@ -47,14 +48,14 @@ function _getTemplate(msg, rawEmotes) {
     return template.join("");
 };
 
-function _renderEmoji(id) { return `<img class="mx-1 w-8 h-8 aspect-square object-cover" src="https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/2.0"/>` }
+function _renderEmoji (id) { return `<img class="mx-1 w-8 h-8 aspect-square object-cover" src="https://static-cdn.jtvnw.net/emoticons/v2/${id}/default/dark/2.0"/>` }
 
-function _filterHTMLTags(msg) { // obra y gracia de JP__is ❤️
+function _filterHTMLTags (msg) { // obra y gracia de JP__is ❤️
     return msg.replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
 }
 
-function _placeEmojis(msg, rawEmotes) {
+function _placeEmojis (msg, rawEmotes) {
     let toRender = _getTemplate(msg, rawEmotes);
     const emotes = _getEmotes(rawEmotes);
     const dot3 = toRender.length > MSG_MAX_LENGTH ? "..." : "";
@@ -75,7 +76,7 @@ function _placeEmojis(msg, rawEmotes) {
     return toRender + dot3;
 };
 
-export default function useTwitchChat() {
+export default function useTwitchChat () {
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState({})
     const [logged, setLogged] = useState(false);
@@ -92,7 +93,6 @@ export default function useTwitchChat() {
     const { sendMessage, lastMessage, readyState } = webSocket;
     const { access_token, client_id } = params;
 
-
     const _middlewareExecutor = (mssg) => {
         const { msg, emotes } = mssg
         let processed = structuredClone(mssg)
@@ -106,8 +106,8 @@ export default function useTwitchChat() {
         return processed
     }
 
-    const _mkMsgObj = (rawMsg) => {
-        const bomb = setTimeout(() => {
+    const _mkMsgObj = (rawMsg, doNotDelete = false) => {
+        const bomb = doNotDelete || setTimeout(() => {
             setMessages((previous) => previous.filter((msg) => msg.autoDestroy !== bomb))
         }, 15000)
         const [data, msg] = rawMsg.split(`PRIVMSG #${CHANNEL} :`)
@@ -116,18 +116,27 @@ export default function useTwitchChat() {
         return objMsg
     }
 
+    useEffect(() => { // TTS -----------------------------------------------
+        const bannedBots = ["Nightbot", "StreamElements", "el_pato_bot"]
+        const msg = lastMessage ? _mkMsgObj(lastMessage.data, true) : "iniciando"
+        if (msg.msg) {
+            const firstWord = msg.msg.split(" ")[0]
+            if (!bannedBots.includes(msg["display-name"]) && firstWord == "!speak") toTTS(msg.msg.replace("!speak ", ""))
+        }
+    }, [lastMessage])
+
     const _mustBeFiltered = (msg) => {
-        let shouldBeFiltered = false        
+        let shouldBeFiltered = false
         if (filters.length) {
             filters.forEach((cb) => {
-                cb(msg) && (shouldBeFiltered=true)
+                cb(msg) && (shouldBeFiltered = true)
             })
         }
         return shouldBeFiltered
     }
 
     const _messageHandler = (previousCue) => {
-        return _mustBeFiltered(_mkMsgObj(lastMessage.data))? previousCue : [_mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))]
+        return _mustBeFiltered(_mkMsgObj(lastMessage.data)) ? previousCue : [_mkMsgObj(lastMessage.data), ...(previousCue.filter((e, i) => i < MSG_AMOUNT))]
     }
 
     if (!access_token) {
