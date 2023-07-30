@@ -19,8 +19,6 @@ function _getEmotes (emotes) {
     });
 }
 
-
-
 function _getTemplate (msg, rawEmotes) {
     const emotes = _getEmotes(rawEmotes);
     let sequence = [];
