@@ -3,7 +3,7 @@ import useURLParams from "./useURLParams";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import axios from "axios"
 import toTTS from "../lib/tts";
-const CHANNEL = "chrisvdev"
+const CHANNEL = "francolabs"
 const MSG_MAX_LENGTH = 150;
 const MSG_AMOUNT = 6
 
