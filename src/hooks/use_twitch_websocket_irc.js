@@ -4,6 +4,8 @@ import getURLParams from "../lib/get_url_params";
 
 export default function useTwitchWebSocketIRC (channel) {
     const { access_token, client_id } = getURLParams()
+    client_id && localStorage.setItem("client_id", client_id)
+    access_token && localStorage.setItem("access_token", access_token)
     /*  
         Si no tengo el token para acceder al contenido del chat abro el OAuth de twitch para conseguirlo.
         Espero que por param de la URL me llegue el token de acceso gracias OAuth de Twitch
@@ -17,7 +19,6 @@ export default function useTwitchWebSocketIRC (channel) {
             navigation.navigate(
                 `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id || saved_client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`
             )
-        client_id && localStorage.setItem("client_id", client_id)
     }
     /*
         Una vez tengo el Token de acceso a twitch abro un websocket para 
