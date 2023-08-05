@@ -39,7 +39,7 @@ function apiDecoupler (rawObjMsg) {
     })
 }
 
-class MessageProcessor {
+class MessagePreProcessor {
     constructor () {
         this.middlewares = []
         this.channel = ""
@@ -68,6 +68,6 @@ class MessageProcessor {
     }
 }
 
-const messageProcessor = new MessageProcessor()
+const messagePreProcessor = new MessagePreProcessor()
 
-export default messageProcessor
+export default messagePreProcessor

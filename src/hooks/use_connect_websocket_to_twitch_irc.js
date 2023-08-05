@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import getURLParams from "../lib/get_url_params";
+import getVariable, { ACCESS_TOKEN, CHANNEL, CLIENT_ID } from "../lib/get_variable";
 
-export default function useTwitchWebSocketIRC (channel) {
-    const { access_token, client_id } = getURLParams()
-    client_id && localStorage.setItem("client_id", client_id)
-    access_token && localStorage.setItem("access_token", access_token)
+export default function useConnectWebSocketToTwitchIRC () {
+    const access_token = getVariable(ACCESS_TOKEN)
+    const client_id = getVariable(CLIENT_ID)
+    const channel = getVariable(CHANNEL)
     /*  
         Si no tengo el token para acceder al contenido del chat abro el OAuth de twitch para conseguirlo.
         Espero que por param de la URL me llegue el token de acceso gracias OAuth de Twitch
@@ -14,10 +14,9 @@ export default function useTwitchWebSocketIRC (channel) {
         para ejecutar el OAuth y recibir el Token
     */
     if (!access_token) {
-        const saved_client_id = localStorage.getItem("client_id");
-        (client_id || saved_client_id) &&
+        client_id &&
             navigation.navigate(
-                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id || saved_client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`
+                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`
             )
     }
     /*
