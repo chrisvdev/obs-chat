@@ -4,8 +4,6 @@ setTimeout(() => {
     speechSynthesis.getVoices().forEach((v) => { voices[v.lang] ? voices[v.lang]++ : voices[v.lang] = 1 })
 }, 500)
 
-
-
 export default function toTTS (msg) {
     const args = msg.split(" ")
     if (msg[2] === "-" && Boolean(voices[args[0]]) && Boolean(Number(args[1][0]) != NaN)) {
