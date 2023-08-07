@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import userDataStorage from "../lib/users_data_storage";
 import renderBadges from "../lib/render_badges";
 import getAvatar from "../lib/get_avatar";
+import "./message.css";
 
 function _getOrnament(badges) {
   if (badges.includes("mod")) return "from-twitch-mod to-twitch-mod_light";
@@ -18,7 +19,11 @@ export default function Message({ message, i }) {
   const badges = renderBadges(message.badges);
   const [loaded, setLoaded] = useState(false);
   return (
-    <div className="relative flex flex-col items-start w-full mt-9">
+    <div
+      className={`relative flex flex-col items-start w-full mt-9 ${
+        message.new ? "newMessage" : ""
+      }${message.dieing ? "dieingMessage" : ""}`}
+    >
       {badges[0] && badges[0]("absolute top-2 left-11")}
       <div className="flex items-center p-2 rounded-full bg-[#222222] absolute left-1 -top-8">
         <div
