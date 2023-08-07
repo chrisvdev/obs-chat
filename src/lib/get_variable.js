@@ -3,6 +3,7 @@ import getURLParams from "./get_url_params";
 export const CLIENT_ID = "client_id"
 export const ACCESS_TOKEN = "access_token"
 export const CHANNEL = "channel"
+export const DEFAULT_AVATAR = "default_avatar"
 
 
 export default function getVariable (variable) {

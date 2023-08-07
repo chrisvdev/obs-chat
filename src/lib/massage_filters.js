@@ -7,7 +7,7 @@ class MessageFilters {
     }
     mustBeFiltered (message) {
 
-        return this.filters.reduce((prev, cb) => {
+        return !this.filters.reduce((prev, cb) => {
             const res = cb(message)
             // console.log(`${cb.name} -> ${res}`)
             return res || prev
