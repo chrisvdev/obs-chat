@@ -64,5 +64,7 @@ export default function useConnectWebSocketToTwitchIRC () {
         }
     }, [lastMessage])
 
+    /* useEffect(() => { console.log(message) }, [message]) */
+
     return message // trigereo una nueva actualización del componente que lo consuma solo si hay un mensaje nuevo
 }

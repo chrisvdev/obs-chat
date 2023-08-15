@@ -4,6 +4,4 @@ class CommandsContainer {
     }
 }
 
-const commandsContainer = new CommandsContainer()
-
-export default commandsContainer
+export default CommandsContainer

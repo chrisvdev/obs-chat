@@ -3,8 +3,6 @@ import useMessageLogic from "./use_message_logic";
 import { useEffect } from "react";
 import { useCallback } from "react";
 
-let interval = null
-
 export default function useMessageCue () {
     const message = useMessageLogic()
     const [cue, setCue] = useState([])

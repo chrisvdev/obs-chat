@@ -1,5 +1,5 @@
-import commandsContainer from '../lib/commands_container'
-import speak from '../commands/speak'
+import { commandsContainer } from '../lib/containers.js'
+import speak from '../commands/speak.js'
 
 commandsContainer.addCommand(speak)
 

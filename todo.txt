@@ -1,1 +1,3 @@
-Ver el contraste con nombres que sean oscuros
+Si el mensaje es solo un URL no lo filterHTMLTags
+comando para inyectar html
+Configurar voz por defecto por IDs de usuario
