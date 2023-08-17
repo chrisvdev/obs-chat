@@ -7,6 +7,7 @@ import botFilter from "../filters/bot_filter.js";
 import commandsFilter from "../filters/commands_filter.js";
 import isNotAMessage from "../filters/is_not_a_message.js";
 import antiGoose from "../middlewares/anti_ganzos.js";
+import usernamePlacer from "../middlewares/username_placer.js";
 import renderCommands from "../middlewares/render_commands.js";
 import getMessageEmojis from "../middlewares/get_message_emojis.js";
 import linkRemover from "../middlewares/link_remover.js";
@@ -27,6 +28,7 @@ messagePreProcessor.useMiddleware(getMessageEmojis);
 messagePreProcessor.useMiddleware(preloadUserData);
 messagePreProcessor.useMiddleware(linkRemover); // hay que arreglar
 messagePreProcessor.useMiddleware(antiGoose);
+messagePreProcessor.useMiddleware(usernamePlacer);
 
 messageFilters.addFilter(isNotAMessage)
 messageFilters.addFilter(botFilter)
