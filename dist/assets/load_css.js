@@ -2,7 +2,6 @@ import getURLParams from "./get_url_params.js"
 
 const params = getURLParams()
 if (params.style) {
-    console.log("agregue el estilo")
     const externalStyle = document.createElement("link")
     externalStyle.rel = "stylesheet"
     externalStyle.href = params.style

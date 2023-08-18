@@ -1,6 +1,6 @@
 class CommandsContainer {
-    addCommand (cb) {
-        this[cb.name] = cb
+    addCommand (name, cb) {
+        this[name] = cb
     }
 }
 

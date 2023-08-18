@@ -18,10 +18,11 @@ import filterHTMLTags from "../middlewares/filter_html_tags.js";
 import placeEmojis from "../middlewares/place_emojis.js";
 import patoBotMiddleware from "../middlewares/pato_bot_middleware.js";
 import placeHTML from "../middlewares/place_html.js";
-import getVariable, { CHANNEL, PATO_BOT } from "../lib/get_variable.js";
+import getVariable, { CHANNEL, HTMLI, PATO_BOT } from "../lib/get_variable.js";
 
 const channel = getVariable(CHANNEL)
 const pato_bot = getVariable(PATO_BOT)
+const htmli = getVariable(HTMLI)
 
 messagePreProcessor.setChannel(channel);
 messagePreProcessor.useMiddleware(getMessageEmojis);
@@ -39,7 +40,7 @@ messageToRenderProcessor.useMiddleware(messageCleaner);
 messageToRenderProcessor.useMiddleware(speakMessageRender);
 messageToRenderProcessor.useMiddleware(filterHTMLTags);
 messageToRenderProcessor.useMiddleware(placeEmojis);
-messageToRenderProcessor.useMiddleware(placeHTML);
+htmli && messageToRenderProcessor.useMiddleware(placeHTML);
 pato_bot && messageToRenderProcessor.useMiddleware(patoBotMiddleware);
 
 export default function useMessageLogic () {

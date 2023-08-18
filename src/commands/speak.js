@@ -2,7 +2,8 @@ import getVariable, { TTS, TTS_ACCENT, TTS_INDEX } from "../lib/get_variable"
 
 const tts = getVariable(TTS)
 const tts_accent = getVariable(TTS_ACCENT)
-const tts_index = Number(getVariable(TTS_INDEX)) - 1
+let tts_index = Number(getVariable(TTS_INDEX))
+tts_index > 0 && (tts_accent -= 1)
 
 const voices = {}
 

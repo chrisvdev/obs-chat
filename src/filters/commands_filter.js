@@ -1,7 +1,7 @@
 import { commandsContainer } from '../lib/containers.js'
 import speak from '../commands/speak.js'
 
-commandsContainer.addCommand(speak)
+commandsContainer.addCommand("speak", speak)
 
 export default function commandsFilter ({ msg }) {
     let isACommand = typeof msg === 'string' ? (!(msg.includes('!hit @jp__is')) && msg[0] === '!') : false // e4yttuh was here 😎
@@ -14,3 +14,6 @@ export default function commandsFilter ({ msg }) {
     return isACommand
 }
 
+{
+    Nv: () => { }
+}

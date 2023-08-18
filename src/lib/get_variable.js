@@ -29,6 +29,7 @@ export const TTS = "tts"
 export const RENDER = "render"
 export const TTS_ACCENT = "tts_accent"
 export const BOTS = "bots"
+export const HTMLI = "htmli"
 
 const active_by_default = [TTS, PATO_BOT, RENDER]
 
@@ -40,7 +41,8 @@ const active_by_default = [TTS, PATO_BOT, RENDER]
 // nombres de bots filtrados 3 ✅🥑
 // Custom CSS (cambiar estilo por defecto) 5 
 //     poder cargar un css externo ✅🥑
-//     reemplazar las clases nombres en notación BEM
+//     reemplazar las clases nombres en notación BEM ✅🥑
+// Inyección HTML desactivada por defecto
 
 export default function getVariable (variable) {
     const urlParams = getURLParams()

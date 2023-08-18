@@ -15,3 +15,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: #2d2d2d;
+}

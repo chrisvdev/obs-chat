@@ -1,6 +1,4 @@
-const notAllowedWords = ["script"]
-
-/* ["script", "src", "iframe", "fixed", "absolute", "!important", "url(", "<audio>", "<video>", "<style>", "svg", "onload", "dialog", "link", "href", "url", "meta"] */
+const notAllowedWords = ["script", "src", "iframe", "fixed", "absolute", "!important", "url(", "<audio>", "<video>", "<style", "svg", "onload", "dialog", "link", "href", "url", "meta"]
 
 export default function placeHTML (message) {
     if (message.html) {
