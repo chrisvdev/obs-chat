@@ -20,7 +20,7 @@ export default function App() {
           ))}
       </div>
     ) : (
-      <div className="flex flex-col h-[100vh] justify-end">
+      <div className="flex flex-col h-[100vh] justify-end text-zinc-100">
         {cue
           .filter((message) => Boolean(message.userId))
           .map((message, i) => (

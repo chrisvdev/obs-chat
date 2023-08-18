@@ -17,7 +17,9 @@ export default function useConnectWebSocketToTwitchIRC () {
     if (!access_token) {
         client_id &&
             navigation.navigate(
-                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=${redirect_uri}`
+                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=
+                ${client_id}
+                &redirect_uri=${redirect_uri ? redirect_uri : "http://localhost:5173/&scope=chat%3Aread"}`
             )
     }
     /*
@@ -26,7 +28,7 @@ export default function useConnectWebSocketToTwitchIRC () {
     */
     const [logged, setLogged] = useState(false);
     const webSocket = useWebSocket(
-        "ws://irc-ws.chat.twitch.tv:80",
+        (redirect_uri ? "wss://irc-ws.chat.twitch.tv:443" : "ws://irc-ws.chat.twitch.tv:80"),
         {
             share: true,
             shouldReconnect: () => true,
