@@ -17,9 +17,7 @@ export default function useConnectWebSocketToTwitchIRC () {
     if (!access_token) {
         client_id &&
             navigation.navigate(
-                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=
-                ${client_id}
-                &redirect_uri=${redirect_uri ? redirect_uri : "http://localhost:5173/&scope=chat%3Aread"}`
+                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=${redirect_uri ? redirect_uri : "http://localhost:5173/&scope=chat%3Aread"}`
             )
     }
     /*
