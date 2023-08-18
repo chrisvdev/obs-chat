@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import userDataStorage from "../lib/users_data_storage";
 import renderBadges from "../lib/render_badges";
 import getAvatar from "../lib/get_avatar";
 import "./message.css";
+import getVariable, { DEFAULT_AVATAR } from "../lib/get_variable";
+
+const defaultAvatar = getVariable(DEFAULT_AVATAR);
 
 function _getOrnament(badges) {
   if (badges.includes("mod")) return "from-twitch-mod to-twitch-mod_light";
@@ -22,7 +24,8 @@ export default function Message({ message, i }) {
     <div
       className={`relative flex flex-col items-start w-full mt-9 ${
         message.new ? "newMessage" : ""
-      }${message.dieing ? "dieingMessage" : ""}`}
+      } ${message.dieing ? "dieingMessage" : ""}`}
+      key={`msg_${i}`}
     >
       {badges[0] && badges[0]("absolute top-2 left-11")}
       <div className="flex items-center p-2 rounded-full bg-[#222222] absolute left-1 -top-8">
@@ -40,7 +43,7 @@ export default function Message({ message, i }) {
           />
           <img
             className="absolute h-11 w-11 rounded-full"
-            src="/assets/st-chrisvdev.gif"
+            src={defaultAvatar ? defaultAvatar : "/assets/st-chrisvdev.gif"}
             style={loaded ? { display: "none" } : {}}
           />
         </div>
@@ -70,7 +73,6 @@ export default function Message({ message, i }) {
           </div>
           <p
             className={`self-start text-slate-50 text-xl text-start flex flex-wrap break-all text-ellipsis font-inter`}
-            key={`msg_${i}`}
             dangerouslySetInnerHTML={{
               __html: message.msg,
             }}

@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import getVariable, { ACCESS_TOKEN, CHANNEL, CLIENT_ID } from "../lib/get_variable";
+import getVariable, { ACCESS_TOKEN, CHANNEL, CLIENT_ID, REDIRECT_URI } from "../lib/get_variable";
 
 export default function useConnectWebSocketToTwitchIRC () {
+    const redirect_uri = getVariable(REDIRECT_URI)
     const access_token = getVariable(ACCESS_TOKEN)
     const client_id = getVariable(CLIENT_ID)
     const channel = getVariable(CHANNEL)
@@ -16,7 +17,7 @@ export default function useConnectWebSocketToTwitchIRC () {
     if (!access_token) {
         client_id &&
             navigation.navigate(
-                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=http://localhost:5173/&scope=chat%3Aread`
+                `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${client_id}&redirect_uri=${redirect_uri}`
             )
     }
     /*

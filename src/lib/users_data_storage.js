@@ -1,6 +1,8 @@
 import axios from "axios"
-const saved_client_id = localStorage.getItem("client_id");
-const saved_access_token = localStorage.getItem("access_token");
+import getVariable, { ACCESS_TOKEN, CLIENT_ID } from "./get_variable";
+
+const client_id = getVariable(CLIENT_ID)
+const access_token = getVariable(ACCESS_TOKEN)
 
 function apiDecoupler (rawUserData) {
     return {
@@ -27,8 +29,8 @@ class UsersDataStorage {
                 url: `https://api.twitch.tv/helix/users?id=${userId}`,
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${saved_access_token}`,
-                    "Client-Id": saved_client_id
+                    Authorization: `Bearer ${access_token}`,
+                    "Client-Id": client_id
                 }
             })
                 .then((response) => {
