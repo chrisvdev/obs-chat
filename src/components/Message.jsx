@@ -72,7 +72,7 @@ export default function Message({ message, i }) {
             {badges.slice(1, badges.length).map((badge, i) => badge("ml-1", i))}
           </div>
           <p
-            className={`self-start text-slate-50 text-xl text-start flex flex-wrap break-all text-ellipsis font-inter`}
+            className={`self-start text-slate-50 text-xl text-start flex flex-wrap font-inter`}
             dangerouslySetInnerHTML={{
               __html: message.msg,
             }}
