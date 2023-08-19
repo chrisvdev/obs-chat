@@ -9,8 +9,8 @@ const style = getVariable(STYLE);
 
 export default function App() {
   const cue = useMessageCue();
-
-  return render ? (
+  console.log(render);
+  return render !== "false" ? (
     style ? (
       <div className="messages_container">
         {cue
