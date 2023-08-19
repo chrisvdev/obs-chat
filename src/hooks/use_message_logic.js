@@ -16,8 +16,9 @@ import messageCleaner from "../middlewares/message_cleaner.js";
 import speakMessageRender from "../middlewares/speak_message_render.js";
 import filterHTMLTags from "../middlewares/filter_html_tags.js";
 import placeEmojis from "../middlewares/place_emojis.js";
-import patoBotMiddleware from "../middlewares/pato_bot_middleware.js";
 import placeHTML from "../middlewares/place_html.js";
+import placeHearts from "../middlewares/place_hearts.js";
+import patoBotMiddleware from "../middlewares/pato_bot_middleware.js";
 import getVariable, { CHANNEL, HTMLI, PATO_BOT } from "../lib/get_variable.js";
 
 const channel = getVariable(CHANNEL)
@@ -39,6 +40,7 @@ messageToRenderProcessor.useMiddleware(renderCommands);
 messageToRenderProcessor.useMiddleware(messageCleaner);
 messageToRenderProcessor.useMiddleware(speakMessageRender);
 messageToRenderProcessor.useMiddleware(filterHTMLTags);
+messageToRenderProcessor.useMiddleware(placeHearts);
 messageToRenderProcessor.useMiddleware(placeEmojis);
 htmli && messageToRenderProcessor.useMiddleware(placeHTML);
 pato_bot && messageToRenderProcessor.useMiddleware(patoBotMiddleware);

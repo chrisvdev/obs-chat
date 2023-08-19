@@ -8,6 +8,7 @@ export default function useMessageCue () {
     const [cue, setCue] = useState([])
     const [inter, setInter] = useState(0)
     const onRefresh = useCallback((cue) => cue.map((message) => (message.ttl === 0 ? { ...message, new: false } : { ...message, dieing: true })), [])
+    /*  useEffect(() => { console.log(message) }, [message]) */
     useEffect(() => {
         message.msg && setCue((lastCue) => ([...lastCue, { ...message, ttl: 40, new: true }]))
     }, [message])
