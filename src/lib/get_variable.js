@@ -46,13 +46,15 @@ const activeByDefault = [TTS, PATO_BOT, RENDER]
 
 export default function getVariable(variable) {
   const urlParams = getURLParams()
-  const lSVariable = localStorage.getItem(variable)
+  // const lSVariable = localStorage.getItem(variable)
   const envVariable = env[variable]
   if (!envVariable && urlParams[variable]) {
-    localStorage.setItem(variable, urlParams[variable])
+    // localStorage.setItem(variable, urlParams[variable])
     return urlParams[variable]
   }
   return activeByDefault.includes(variable)
-    ? !(urlParams[variable] || lSVariable)
-    : envVariable || urlParams[variable] || lSVariable
+    ? // ? !(urlParams[variable] || lSVariable)
+      // : envVariable || urlParams[variable] || lSVariable
+      !urlParams[variable]
+    : envVariable || urlParams[variable]
 }

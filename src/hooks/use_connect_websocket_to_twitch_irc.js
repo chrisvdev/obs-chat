@@ -26,7 +26,7 @@ export default function useConnectWebSocketToTwitchIRC() {
         // navigation object exists on the supported browsers
         // eslint-disable-next-line max-len, no-unneeded-ternary
         `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${
-          redirectUri ? redirectUri : 'http://localhost:5173/&scope=chat%3Aread'
+          redirectUri || 'http://localhost:5173/&scope=chat%3Aread'
         }`
       )
   }
