@@ -28,7 +28,7 @@ variables = { ...variables, ...getURLParams() }
 Object.keys(variables).forEach((key) => {
   if (typeof variables[key] === 'string') {
     if (variables[key].toLowerCase() === 'true') variables[key] = true
-    if (variables[key].toLowerCase() === 'false') variables[key] = false
+    if (`${variables[key]}`.toLowerCase() === 'false') variables[key] = false
   }
 })
 
@@ -43,7 +43,9 @@ const env = {
   default_avatar: import.meta.env.VITE_DEFAULT_AVATAR
 }
 
-variables = { ...variables, ...env }
+Object.keys(env).forEach((key) => {
+  if (env[key]) variables[key] = env[key]
+})
 
 const activeByDefault = [TTS, PATO_BOT, RENDER]
 

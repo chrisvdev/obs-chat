@@ -1,15 +1,15 @@
-import React from "react";
-import useMessageCue from "./hooks/use_message_cue.js";
-import Message from "./components/Message.jsx";
-import StyledMessage from "./components/StyleMessage.jsx";
-import getVariable, { RENDER, STYLE } from "./lib/get_variable.js";
+import React from 'react'
+import useMessageCue from './hooks/use_message_cue.js'
+import Message from './components/Message.jsx'
+import StyledMessage from './components/StyleMessage.jsx'
+import getVariable, { RENDER, STYLE } from './lib/get_variable.js'
 
-const render = getVariable(RENDER);
-const style = getVariable(STYLE);
+const render = getVariable(RENDER)
+const style = getVariable(STYLE)
 
 export default function App() {
-  const cue = useMessageCue();
-  return render !== "false" ? (
+  const cue = useMessageCue()
+  return render ? (
     style ? (
       <div className="messages_container">
         {cue
@@ -31,5 +31,5 @@ export default function App() {
     <div className="flex flex-col justify-center items-center">
       <h1 className="font-medium text-lg text-black">No Render</h1>
     </div>
-  );
+  )
 }
