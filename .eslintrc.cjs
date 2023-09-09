@@ -25,15 +25,5 @@ module.exports = {
       version: 'detect'
     }
   },
-  plugins: ['react'],
-  rules: {
-    'max-len': [
-      'warn',
-      {
-        code: 80,
-        tabWidth: 2,
-        comments: 80
-      }
-    ]
-  }
+  plugins: ['react']
 }
