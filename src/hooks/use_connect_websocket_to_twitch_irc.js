@@ -12,6 +12,7 @@ export default function useConnectWebSocketToTwitchIRC() {
   const accessToken = getVariable(ACCESS_TOKEN)
   const clientId = getVariable(CLIENT_ID)
   const channel = getVariable(CHANNEL)
+
   /*
       Si no tengo el token para acceder al contenido del chat abro el OAuth de
       twitch para conseguirlo. Espero que por param de la URL me llegue el
@@ -19,17 +20,18 @@ export default function useConnectWebSocketToTwitchIRC() {
       param CLientID o tenerlo ya el LocalStorage (registrado ya como APP en
       la consola de Twitch) para ejecutar el OAuth y recibir el Token
   */
-  if (!accessToken) {
-    clientId &&
+
+  if (accessToken === undefined) {
+    const URL = `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}`
+
+    if ('navigation' in window) {
       // eslint-disable-next-line no-undef
-      navigation.navigate(
-        // navigation object exists on the supported browsers
-        // eslint-disable-next-line max-len, no-unneeded-ternary
-        `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${
-          redirectUri || 'http://localhost:5173/&scope=chat%3Aread'
-        }`
-      )
+      navigation.navigate(URL)
+    } else {
+      window.location.href = URL
+    }
   }
+
   /*
       Una vez tengo el Token de acceso a twitch abro un websocket para
       conectarme al IRC, autenticarme y empezar a recibir los mensajes.
