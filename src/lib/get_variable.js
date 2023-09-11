@@ -32,6 +32,9 @@ Object.keys(variables).forEach((key) => {
   }
 })
 
+typeof variables[TTS_INDEX] === 'string' &&
+  (variables[TTS_INDEX] = Number(variables[TTS_INDEX]) || 1)
+
 localStorage.setItem(VARIABLES, JSON.stringify(variables))
 
 const env = {
