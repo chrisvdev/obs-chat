@@ -1,10 +1,10 @@
 import getVariable, { TTS, TTS_ACCENT, TTS_INDEX } from '../lib/get_variable'
 
 const tts = getVariable(TTS)
-let ttsAccent = getVariable(TTS_ACCENT)
+const ttsAccent = getVariable(TTS_ACCENT)
 // eslint-disable-next-line prefer-const
 let ttsIndex = Number(getVariable(TTS_INDEX))
-ttsIndex > 0 && (ttsAccent -= 1)
+ttsIndex > 0 && (ttsIndex -= 1)
 
 const voices = {}
 
