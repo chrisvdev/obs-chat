@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import useMessageLogic from './use_message_logic'
 
-export default function useMessageCue() {
+export default function useMessageQueue() {
   const message = useMessageLogic()
-  const [cue, setCue] = useState([])
+  const [queue, setQueue] = useState([])
   const [, setInter] = useState(0)
   const onRefresh = useCallback(
     (cue) =>
@@ -17,14 +17,17 @@ export default function useMessageCue() {
   /*  useEffect(() => { console.log(message) }, [message]) */
   useEffect(() => {
     message.msg &&
-      setCue((lastCue) => [...lastCue, { ...message, ttl: 40, new: true }])
+      setQueue((lastQueue) => [
+        ...lastQueue,
+        { ...message, ttl: 40, new: true }
+      ])
   }, [message])
   useEffect(() => {
     setInter(
       setInterval(() => {
-        setCue((lastCue) =>
+        setQueue((lastQueue) =>
           onRefresh(
-            lastCue
+            lastQueue
               .map((message) => ({ ...message, ttl: message.ttl - 1 }))
               .filter((message) => message.ttl > 0)
           )
@@ -32,5 +35,5 @@ export default function useMessageCue() {
       }, 500)
     )
   }, [])
-  return cue
+  return queue
 }

@@ -22,7 +22,7 @@ export default function useConnectWebSocketToTwitchIRC() {
   */
 
   if (accessToken === undefined) {
-    const URL = `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}`
+    const URL = `https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=chat%3Aread`
 
     if ('navigation' in window) {
       // eslint-disable-next-line no-undef

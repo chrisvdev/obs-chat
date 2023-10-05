@@ -38,12 +38,11 @@ typeof variables[TTS_INDEX] === 'string' &&
 localStorage.setItem(VARIABLES, JSON.stringify(variables))
 
 const env = {
-  redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+  redirect_uri: import.meta.env.VITE_REDIRECT_URI || 'http://localhost:5173/',
   secret: import.meta.env.VITE_SECRET,
   client_id: import.meta.env.VITE_CLIENT_ID,
   access_token: import.meta.env.VITE_ACCESS_TOKEN,
-  channel: import.meta.env.VITE_CHANNEL,
-  default_avatar: import.meta.env.VITE_DEFAULT_AVATAR
+  channel: import.meta.env.VITE_CHANNEL
 }
 
 Object.keys(env).forEach((key) => {
@@ -59,14 +58,3 @@ activeByDefault.forEach((key) => {
 export default function getVariable(variable) {
   return variables[variable]
 }
-
-// toDo
-// habilitar o deshabilitar compatibilidad con el PatoBot 1 ✅🥑
-// habilitar o deshabilitar TTS 1 ✅🥑
-// Deshabilitar Render 1 ✅🥑
-// elegir voz por defecto del TTS  2  ✅🥑
-// nombres de bots filtrados 3 ✅🥑
-// Custom CSS (cambiar estilo por defecto) 5
-//     poder cargar un css externo ✅🥑
-//     reemplazar las clases nombres en notación BEM ✅🥑
-// Inyección HTML desactivada por defecto

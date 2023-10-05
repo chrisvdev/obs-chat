@@ -1,5 +1,5 @@
 import React from 'react'
-import useMessageCue from './hooks/use_message_cue.js'
+import useMessageQueue from './hooks/use_message_queue.js'
 import Message from './components/Message.jsx'
 import StyledMessage from './components/StyleMessage.jsx'
 import getVariable, { RENDER, STYLE } from './lib/get_variable.js'
@@ -8,7 +8,7 @@ const render = getVariable(RENDER)
 const style = getVariable(STYLE)
 
 export default function App() {
-  const cue = useMessageCue()
+  const cue = useMessageQueue()
   return render ? (
     style ? (
       <div className="messages_container">
