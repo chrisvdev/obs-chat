@@ -36,7 +36,6 @@ class UsersDataStorage {
         }
       }).then((response) => {
         this.#storage[userId] = apiDecoupler(response.data.data[0])
-        // console.log(this.storage)
       })
       return apiDecoupler({})
     }

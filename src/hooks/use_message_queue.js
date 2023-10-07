@@ -5,17 +5,18 @@ export default function useMessageQueue() {
   const message = useMessageLogic()
   const [queue, setQueue] = useState([])
   const [, setInter] = useState(0)
-  // useEffect(() => { console.log(message) }, [message])
+  useEffect(() => {
+    console.log(message)
+  }, [message])
   const onRefresh = useCallback(
     (cue) =>
       cue.map((message) =>
-        message.ttl === 0
-          ? { ...message, new: false }
-          : { ...message, dieing: true }
+        message.ttl === 1
+          ? { ...message, dieing: true }
+          : { ...message, new: false }
       ),
     []
   )
-  /*  useEffect(() => { console.log(message) }, [message]) */
   useEffect(() => {
     message.msg &&
       setQueue((lastQueue) => [

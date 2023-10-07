@@ -21,8 +21,8 @@ export default function StyledMessage({ message, i }) {
   const [loaded, setLoaded] = useState(false)
   return (
     <div
-      className={`message ${message.new ? 'newMessage' : ''}${
-        message.dieing ? 'dieingMessage' : ''
+      className={`message ${message.new ? ' newMessage ' : ''}${
+        message.dieing ? ' dieingMessage ' : ''
       } ${_getOrnament(message.badges)}`}
     >
       {badges[0] && badges[0]('message_userBadge-primary', 0, true)}
