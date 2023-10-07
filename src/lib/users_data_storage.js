@@ -20,12 +20,13 @@ function apiDecoupler(rawUserData) {
 }
 
 class UsersDataStorage {
+  #storage
   constructor() {
-    this.storage = {}
+    this.#storage = {}
   }
 
   getUserData(userId) {
-    if (!this.storage[userId]) {
+    if (!this.#storage[userId]) {
       axios({
         url: `https://api.twitch.tv/helix/users?id=${userId}`,
         method: 'GET',
@@ -34,12 +35,12 @@ class UsersDataStorage {
           'Client-Id': clientId
         }
       }).then((response) => {
-        this.storage[userId] = apiDecoupler(response.data.data[0])
+        this.#storage[userId] = apiDecoupler(response.data.data[0])
         // console.log(this.storage)
       })
       return apiDecoupler({})
     }
-    return this.storage[userId]
+    return this.#storage[userId]
   }
 }
 

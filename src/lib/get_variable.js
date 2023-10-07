@@ -45,6 +45,8 @@ const env = {
   channel: import.meta.env.VITE_CHANNEL
 }
 
+variables[DEFAULT_AVATAR] ??= '/assets/st-chrisvdev.gif'
+
 Object.keys(env).forEach((key) => {
   if (env[key]) variables[key] = env[key]
 })

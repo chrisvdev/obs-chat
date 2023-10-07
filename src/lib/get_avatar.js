@@ -3,6 +3,8 @@ import getVariable, { DEFAULT_AVATAR } from './get_variable'
 
 const defaultAvatar = getVariable(DEFAULT_AVATAR)
 
+console.log(defaultAvatar)
+
 export default function getAvatar(userId) {
   const avatar = userDataStorage
     .getUserData(userId)
