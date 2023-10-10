@@ -21,7 +21,7 @@ export default function useMessageQueue() {
     message.msg &&
       setQueue((lastQueue) => [
         ...lastQueue,
-        { ...message, ttl: 40, new: true }
+        { ...message, ttl: 10, new: true }
       ])
   }, [message])
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function useMessageQueue() {
               .filter((message) => message.ttl > 0)
           )
         )
-      }, 500)
+      }, 2000)
     )
   }, [])
   return queue
