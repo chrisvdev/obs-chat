@@ -5,9 +5,6 @@ export default function useMessageQueue() {
   const message = useMessageLogic()
   const [queue, setQueue] = useState([])
   const [, setInter] = useState(0)
-  useEffect(() => {
-    console.log(message)
-  }, [message])
   const onRefresh = useCallback(
     (cue) =>
       cue.map((message) =>
