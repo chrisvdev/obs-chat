@@ -44,7 +44,7 @@ export default function Message({ message, i }) {
           />
           <img
             className="absolute h-11 w-11 rounded-full"
-            src={defaultAvatar || '/assets/st-chrisvdev.gif'}
+            src={defaultAvatar || './assets/st-chrisvdev.gif'}
             style={loaded ? { display: 'none' } : {}}
           />
         </div>
