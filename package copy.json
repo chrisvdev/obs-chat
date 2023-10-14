@@ -18,6 +18,7 @@
       "eslint --cache --ext .jsx ./src/ --fix",
       "prettier --cache --write \"./src/**/*.jsx\""
     ],
+    "./src/**/*.css": "prettier --cache --write \"./src/styles/*.css\"",
     "./**/*.json": "prettier --cache --write \"./**/*.json\"",
     "./**/*.md": "prettier --cache --write \"./**/*.md\""
   },
