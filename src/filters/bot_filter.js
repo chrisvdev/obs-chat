@@ -7,5 +7,9 @@ const defaultBots = ['nightbot', 'streamelements', 'el_pato_bot', 'afordibot']
 const bannedBots = bots ? [...defaultBots, ...bots] : defaultBots
 
 export default function botFilter(msg) {
-  return bannedBots.includes(msg.userName)
+  if (bannedBots.includes(msg.userName)) {
+    msg.isABot = true
+    return true
+  }
+  return false
 }
