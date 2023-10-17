@@ -28,7 +28,6 @@ class TTS {
   }
 
   speak(msj, accent, variant) {
-    console.log(`Accent: ${accent}, Variant: ${variant}`)
     const toSpeak = new SpeechSynthesisUtterance(msj)
     toSpeak.voice = this.#voices[accent]
       ? variant <= this.#voices[accent]
@@ -39,8 +38,6 @@ class TTS {
             .getVoices()
             .filter((voice) => voice.lang === accent)[0]
       : speechSynthesis.getVoices()[0]
-    console.log(variant)
-    console.log(toSpeak)
     speechSynthesis.speak(toSpeak)
   }
 
@@ -50,6 +47,10 @@ class TTS {
 
   whenReady(cb) {
     this.#ready ? cb(this.#voices) : this.#onReady.push(cb)
+  }
+
+  isAValidVoice(voice) {
+    return Boolean(this.#voices[voice])
   }
 }
 
