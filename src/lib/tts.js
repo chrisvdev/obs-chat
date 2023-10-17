@@ -1,36 +1,58 @@
-const message = new SpeechSynthesisUtterance('')
-const voices = {}
-setTimeout(() => {
-  speechSynthesis.getVoices().forEach((v) => {
-    voices[v.lang] ? voices[v.lang]++ : (voices[v.lang] = 1)
-  })
-}, 500)
-
-export default function toTTS(msg) {
-  const args = msg.split(' ')
-  if (
-    msg[2] === '-' &&
-    Boolean(voices[args[0]]) &&
-    !isNaN(Number(args[1][0]))
-  ) {
-    message.voice = speechSynthesis
-      .getVoices()
-      .filter((v) => v.lang === args[0])[
-      isNaN(Number(args[1][0]))
-        ? 0
-        : Number(args[1][0]) <= voices[args[0]] && Number(args[1][0]) > 0
-        ? Number(args[1][0]) - 1
-        : 0
-    ]
-    message.text = msg.replace(
-      `${args[0]}${isNaN(Number(args[1][0])) ? ' ' : ` ${args[1]}`}`,
-      ''
-    )
-  } else {
-    message.voice = speechSynthesis
-      .getVoices()
-      .filter((v) => v.lang === 'es-AR')[0]
-    message.text = msg
+class TTS {
+  #voices
+  #onReady
+  #ready
+  #whenSinthReady
+  constructor() {
+    this.#voices = {}
+    this.#onReady = []
+    this.#ready = false
+    this.#whenSinthReady = () => {
+      speechSynthesis.getVoices().forEach((voice) => {
+        const { lang } = voice
+        if (lang.length === 5)
+          this.#voices[lang]
+            ? (this.#voices[lang] += 1)
+            : (this.#voices[lang] = 1)
+        this.#ready = true
+        this.#onReady.forEach((cb) => {
+          cb(this.#voices)
+        })
+        speechSynthesis.removeEventListener(
+          'voiceschanged',
+          this.#whenSinthReady
+        )
+      })
+    }
+    speechSynthesis.addEventListener('voiceschanged', this.#whenSinthReady)
   }
-  speechSynthesis.speak(message)
+
+  speak(msj, accent, variant) {
+    console.log(`Accent: ${accent}, Variant: ${variant}`)
+    const toSpeak = new SpeechSynthesisUtterance(msj)
+    toSpeak.voice = this.#voices[accent]
+      ? variant <= this.#voices[accent]
+        ? speechSynthesis.getVoices().filter((voice) => voice.lang === accent)[
+            variant - 1
+          ]
+        : speechSynthesis
+            .getVoices()
+            .filter((voice) => voice.lang === accent)[0]
+      : speechSynthesis.getVoices()[0]
+    console.log(variant)
+    console.log(toSpeak)
+    speechSynthesis.speak(toSpeak)
+  }
+
+  getVoices() {
+    return structuredClone(this.#voices)
+  }
+
+  whenReady(cb) {
+    this.#ready ? cb(this.#voices) : this.#onReady.push(cb)
+  }
 }
+
+const tts = new TTS()
+
+export default tts
