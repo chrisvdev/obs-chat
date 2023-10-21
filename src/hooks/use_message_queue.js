@@ -15,6 +15,7 @@ export default function useMessageQueue() {
     []
   )
   useEffect(() => {
+    console.log(message)
     message.msg &&
       setQueue((lastQueue) => [
         ...lastQueue,
