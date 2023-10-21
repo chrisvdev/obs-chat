@@ -3,18 +3,17 @@ import speak from '../commands/speak.js'
 
 commandsContainer.addCommand('speak', speak)
 
-export default function commandsFilter(message) {
-  const { msg, isABot } = message
-
+export default function commandsFilter({ msg, userName, isABot }) {
   let isACommand =
     typeof msg === 'string'
       ? !msg.includes('!hit @jp__is') && msg[0] === '!'
       : false // e4yttuh was here 😎
   if (isACommand && !isABot) {
-    let [command] = msg.split(' ')
+    let [command, ...rest] = msg.split(' ')
     command = command.replace('!', '')
+    rest = rest.join(' ')
     commandsContainer[command] &&
-      (isACommand = commandsContainer[command](message))
+      (isACommand = commandsContainer[command](rest, userName))
   }
   return isACommand
 }

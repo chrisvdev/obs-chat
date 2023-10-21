@@ -50,7 +50,7 @@ class TTS {
   }
 
   isAValidVoice(voice) {
-    return Object.keys(this.#voices).includes(voice)
+    return Boolean(this.#voices[voice])
   }
 }
 
