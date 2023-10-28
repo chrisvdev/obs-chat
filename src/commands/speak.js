@@ -9,7 +9,7 @@ let ttsIndex = Number(getVariable(TTS_INDEX))
 ttsIndex > 0 && (ttsIndex -= 1)
 
 // eslint-disable-next-line no-unused-vars
-const [COMMAND, ACCENT_OR_MODIFIER, VARIANT] = [0, 1, 2]
+const [ACCENT_OR_MODIFIER, VARIANT] = [0, 1]
 
 const isAAccent = /^[a-zA-Z]{1,2}-[a-zA-Z]{1,2}$/g
 
@@ -26,60 +26,61 @@ function normalize(accent) {
 function isAnAccent(toEvaluate) {
   const result = tts.isAValidVoice(toEvaluate)
   return result
-}
+} /*
 
-function isAnModifier(toEvaluate) {
+function isAnModifier (toEvaluate) {
   return toEvaluate[0] === '-'
 }
 
-export default function speak(message) {
+function config (message) {
+  const { msg, userName } = message
+  const words = msg.split(' ').map((word) => word.trim())
+  const acce = normalize(words[1])
+  if (tts.isAValidVoice(acce) && words[1][2] === '-') {
+    TTSConfigVault.setConfig(
+      userName,
+      acce,
+      words[2] ? Number(words[2]) : 1
+    )
+  }
+  return true
+}
+
+function reset ({ userName }) {
+  TTSConfigVault.resetConfig(userName)
+  return true
+}
+*/
+
+function speak(message) {
   const { msg, userName } = message
 
   if (ttsEnabled) {
     let accent = ttsAccent
     let variant = ttsIndex || 1
     let toRead = ''
-
     const words = msg.split(' ').map((word) => word.trim())
-    if (words[ACCENT_OR_MODIFIER] === '-config') {
-      const acce = normalize(words[1])
-      if (tts.isAValidVoice(acce) && words[1][2] === '-') {
-        TTSConfigVault.setConfig(
-          userName,
-          acce,
-          words[2] ? Number(words[2]) : 1
-        )
+    if (isAnAccent(words[ACCENT_OR_MODIFIER])) {
+      accent = normalize(words[ACCENT_OR_MODIFIER])
+      if (!Number.isNaN(Number(words[VARIANT]))) {
+        variant = Number(words[VARIANT])
+        toRead = words.slice(3).join(' ')
+      } else toRead = words.slice(2).join(' ')
+    } else {
+      toRead = msg.replace('!speak ', '')
+      const config = TTSConfigVault.getConfig(userName)
+      if (config) {
+        accent = config.accent
+        variant = config.variant
       }
-      return true
     }
-
-    if (words[ACCENT_OR_MODIFIER] === '-reset') {
-      TTSConfigVault.resetConfig(userName)
-      return true
+    message.speak = {
+      toRead: toRead.trim(),
+      accent,
+      variant
     }
-
-    if (!isAnModifier(words[ACCENT_OR_MODIFIER])) {
-      if (isAnAccent(words[ACCENT_OR_MODIFIER])) {
-        accent = normalize(words[ACCENT_OR_MODIFIER])
-        if (!Number.isNaN(Number(words[VARIANT]))) {
-          variant = Number(words[VARIANT])
-          toRead = words.slice(3).join(' ')
-        } else toRead = words.slice(2).join(' ')
-      } else {
-        toRead = msg.replace('!speak ', '')
-        const config = TTSConfigVault.getConfig(userName)
-        if (config) {
-          accent = config.accent
-          variant = config.variant
-        }
-      }
-      message.speak = {
-        toRead: toRead.trim(),
-        accent,
-        variant
-      }
-      return false
-    }
-    return true
+    return false
   }
 }
+
+export default speak

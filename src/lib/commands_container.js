@@ -1,62 +1,46 @@
-// Based on the logic of a code madded from SonnyArg, THX <3
-
-class Trigger {
-  constructor(pattern, priority, execute) {
-    this.pattern = pattern
-    this.execute = execute
-    this.priority = priority
-  }
-
-  test(msg) {
-    const result = msg.search(this.pattern)
-    console.log(this.pattern, result)
-    return result
-  }
-
-  getArgs(msg) {
-    let ref, ref1
-    const match = (ref = this.pattern.exec(msg)) != null ? ref : ['']
-    const capture = (ref1 = match[1]) != null ? ref1 : ''
-    if (!/\S/.test(capture)) {
-      return []
-    }
-    return capture.split(/\s+/)
-  }
-}
-
-function escapeRegex(string) {
-  return string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
-}
-
-function buildTrigger(command, execute) {
-  let words
-  words = command.split(' ')
-  words = words.map((word) => escapeRegex(word))
-  const regex = new RegExp('^!' + words.join('\\s+') + '(?:\\s+(.+))?$', 'i')
-  console.log(regex)
-  const priority = words.length
-  return new Trigger(regex, priority, execute)
-}
-
 class CommandsContainer {
-  #commands = []
+  #commands = {}
+  #EXEC = Symbol('exec')
+  #splitKeys(message) {
+    return message.trim().split(/\s+/)
+  }
+
   addCommand(command, cb) {
-    this.#commands.push(buildTrigger(command, cb))
-    this.#commands.sort(
-      ({ priority: priorityA }, { priority: priorityB }) =>
-        priorityB - priorityA
-    )
+    const keys = this.#splitKeys(command)
+    let lastRef = this.#commands
+    keys.forEach((key) => {
+      if (lastRef[key]) {
+        lastRef = lastRef[key]
+      } else {
+        lastRef[key] = {}
+        lastRef = lastRef[key]
+      }
+    })
+    lastRef[this.#EXEC] = cb
   }
 
-  matchCommand(message) {
-    return this.#commands.find((trigger) => trigger.test(message))
-  }
-
-  executeIfFound(message) {
-    const trigger = this.matchCommand(message)
-    if (trigger && typeof trigger.execute === 'function')
-      return trigger.execute(trigger.getArgs(message))
-    return false
+  foundCommand(message) {
+    const keys = this.#splitKeys(message)
+    let lastRef = this.#commands
+    let keyIndex = 0
+    const searchCommand = () => {
+      if (lastRef) {
+        if (lastRef[keys[keyIndex]]) {
+          lastRef = lastRef[keys[keyIndex]]
+          keyIndex++
+          return searchCommand()
+        }
+        if (lastRef[this.#EXEC]) return lastRef[this.#EXEC]
+        return false
+      }
+    }
+    const command = searchCommand()
+    return command
+      ? (message) => {
+          message.msg = keys.slice(keyIndex).join(' ')
+          command(message)
+        }
+      : false
   }
 }
 
