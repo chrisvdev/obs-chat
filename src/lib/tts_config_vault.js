@@ -28,7 +28,11 @@ export default class TTSConfigVault {
   static setConfig(userName, accent, variant) {
     if (tts.isAValidVoice(accent)) {
       const vault = this.getVault()
-      vault[userName] = { accent, variant }
+
+      vault[userName] = {
+        accent,
+        variant: tts.isAValidVariant(accent, variant) ? variant : 1
+      }
       localStorage.setItem(VAULT, JSON.stringify(vault))
     }
   }

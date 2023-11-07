@@ -20,37 +20,47 @@ function normalize(accent) {
     post = post.toUpperCase()
     return `${prev}-${post}`
   }
-  return ttsAccent
+  return 'nt-VD'
 }
 
 function isAnAccent(toEvaluate) {
   const result = tts.isAValidVoice(toEvaluate)
   return result
-} /*
+}
 
+/*
 function isAnModifier (toEvaluate) {
   return toEvaluate[0] === '-'
 }
+*/
 
-function config (message) {
+const ACC = 0
+const VAR = 1
+
+function config(message) {
   const { msg, userName } = message
   const words = msg.split(' ').map((word) => word.trim())
-  const acce = normalize(words[1])
-  if (tts.isAValidVoice(acce) && words[1][2] === '-') {
-    TTSConfigVault.setConfig(
-      userName,
+  const acce = normalize(words[ACC])
+  const vari = Math.ceil(Number(words[VAR]))
+  console.log(
+    `${userName} voz valida:${tts.isAValidVoice(
+      acce
+    )}, Variante valida: ${tts.isAValidVariant(
       acce,
-      words[2] ? Number(words[2]) : 1
-    )
+      vari
+    )}, Difernte del por defecto: ${acce !== ttsAccent}`
+  )
+  if (tts.isAValidVoice(acce) && tts.isAValidVariant(acce, vari)) {
+    console.log(userName, words)
+    TTSConfigVault.setConfig(userName, acce, !isNaN(vari) ? vari : 1)
   }
   return true
 }
 
-function reset ({ userName }) {
+function reset({ userName }) {
   TTSConfigVault.resetConfig(userName)
   return true
 }
-*/
 
 function speak(message) {
   const { msg, userName } = message
@@ -83,4 +93,10 @@ function speak(message) {
   }
 }
 
-export default speak
+const TextToSpeak = {
+  speak,
+  reset,
+  config
+}
+
+export default TextToSpeak

@@ -1,9 +1,9 @@
 import { commandsContainer } from '../lib/containers.js'
-import speak from '../commands/speak.js'
+import TextToSpeak from '../commands/speak.js'
 
-commandsContainer.addCommand('!speak', speak)
-commandsContainer.addCommand('!speak -config', speak.config)
-commandsContainer.addCommand('!speak algo', speak.algo)
+commandsContainer.addCommand('!speak', TextToSpeak.speak)
+commandsContainer.addCommand('!speak -config', TextToSpeak.config)
+commandsContainer.addCommand('!speak -reset', TextToSpeak.reset)
 
 export default function commandsFilter(message) {
   const { msg, isABot } = message

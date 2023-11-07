@@ -1,4 +1,4 @@
-class CommandsContainer {
+class ComManzContainer {
   #commands = {}
   #EXEC = Symbol('exec')
   #splitKeys(message) {
@@ -38,10 +38,10 @@ class CommandsContainer {
     return command
       ? (message) => {
           message.msg = keys.slice(keyIndex).join(' ')
-          command(message)
+          return command(message)
         }
       : false
   }
 }
 
-export default CommandsContainer
+export default ComManzContainer
