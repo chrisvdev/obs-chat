@@ -1,4 +1,4 @@
-import CommandsContainer from './commands_container.js'
+import ComManzContainer from './commands_container.js'
 
-export const commandsContainer = new CommandsContainer()
-export const renderCommandsContainer = new CommandsContainer()
+export const commandsContainer = new ComManzContainer()
+export const renderCommandsContainer = new ComManzContainer()
