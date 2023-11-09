@@ -2,7 +2,7 @@ import { commandsContainer } from '../lib/containers.js'
 import TextToSpeak from '../commands/speak.js'
 import getVariable, { CHAR_COMMANDS } from '../lib/get_variable.js'
 
-const charCommands = [...getVariable(CHAR_COMMANDS)?.split(',')]
+const charCommands = getVariable(CHAR_COMMANDS)?.split(',') || []
 
 commandsContainer.addCommand('!speak', TextToSpeak.speak)
 commandsContainer.addCommand('!speak -config', TextToSpeak.config)
