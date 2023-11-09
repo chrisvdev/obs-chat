@@ -1,19 +1,19 @@
 import { commandsContainer } from '../lib/containers.js'
-import TextToSpeak from '../commands/speak.js'
+import speak from '../commands/speak.js'
 
-commandsContainer.addCommand('!speak', TextToSpeak.speak)
-commandsContainer.addCommand('!speak -config', TextToSpeak.config)
-commandsContainer.addCommand('!speak -reset', TextToSpeak.reset)
+commandsContainer.addCommand('speak', speak)
 
-export default function commandsFilter(message) {
-  const { msg, isABot } = message
-  const isAValidMessage = typeof msg === 'string'
-  const isACommand = isAValidMessage
-    ? !msg.includes('!hit @jp__is') && msg[0] === '!'
-    : false // Pablo (A.K.A. e4yttuh) was here 😎
-  if (isAValidMessage && !isABot) {
-    const command = commandsContainer.foundCommand(msg)
-    return command ? command(message) : command
+export default function commandsFilter({ msg, userName, isABot }) {
+  let isACommand =
+    typeof msg === 'string'
+      ? !msg.includes('!hit @jp__is') && msg[0] === '!'
+      : false // e4yttuh was here 😎
+  if (isACommand && !isABot) {
+    let [command, ...rest] = msg.split(' ')
+    command = command.replace('!', '')
+    rest = rest.join(' ')
+    commandsContainer[command] &&
+      (isACommand = commandsContainer[command](rest, userName))
   }
   return isACommand
 }
