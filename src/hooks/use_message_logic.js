@@ -7,7 +7,6 @@ import messageToRenderProcessor from '../lib/message_to_render_processor.js'
 import botFilter from '../filters/bot_filter.js'
 import commandsFilter from '../filters/commands_filter.js'
 import isNotAMessage from '../filters/is_not_a_message.js'
-import ttsAlwaysOn from '../middlewares/tts_always_on.js'
 import antiGoose from '../middlewares/anti_ganzos.js'
 import action from '../middlewares/action.js'
 import usernamePlacer from '../middlewares/username_placer.js'
@@ -22,18 +21,11 @@ import placeEmojis from '../middlewares/place_emojis.js'
 import placeHTML from '../middlewares/place_html.js'
 import placeHearts from '../middlewares/place_hearts.js'
 import patoBotMiddleware from '../middlewares/pato_bot_middleware.js'
-import toTTS from '../middlewares/to_tts.js'
-import getVariable, {
-  CHANNEL,
-  HTMLI,
-  PATO_BOT,
-  TTS_ALWAYS_ON
-} from '../lib/get_variable.js'
+import getVariable, { CHANNEL, HTMLI, PATO_BOT } from '../lib/get_variable.js'
 
 const channel = getVariable(CHANNEL)
 const patoBot = getVariable(PATO_BOT)
 const htmli = getVariable(HTMLI)
-const TTSAlwaysOn = getVariable(TTS_ALWAYS_ON)
 
 messagePreProcessor.setChannel(channel)
 messagePreProcessor.useMiddleware(getMessageEmojis)
@@ -47,16 +39,14 @@ messageFilters.addFilter(isNotAMessage)
 messageFilters.addFilter(botFilter)
 messageFilters.addFilter(commandsFilter)
 
-messageToRenderProcessor.useMiddleware(ttsAlwaysOn)
 messageToRenderProcessor.useMiddleware(renderCommands)
 messageToRenderProcessor.useMiddleware(messageCleaner)
-!TTSAlwaysOn && messageToRenderProcessor.useMiddleware(speakMessageRender)
+messageToRenderProcessor.useMiddleware(speakMessageRender)
 messageToRenderProcessor.useMiddleware(filterHTMLTags)
 messageToRenderProcessor.useMiddleware(placeHearts)
 messageToRenderProcessor.useMiddleware(placeEmojis)
 htmli && messageToRenderProcessor.useMiddleware(placeHTML)
 patoBot && messageToRenderProcessor.useMiddleware(patoBotMiddleware)
-messageToRenderProcessor.useMiddleware(toTTS)
 
 export default function useMessageLogic() {
   const message = useConnectWebSocketToTwitchIRC(channel)
