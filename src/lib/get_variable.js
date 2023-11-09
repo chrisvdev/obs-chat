@@ -21,6 +21,7 @@ export const TTS_ALWAYS_ON = 'tts_always_on'
 export const RENDER = 'render'
 export const BOTS = 'bots'
 export const HTMLI = 'htmli'
+export const CHAR_COMMANDS = 'char_commands'
 
 let variables = JSON.parse(localStorage.getItem(VARIABLES)) || {}
 

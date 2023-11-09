@@ -55,11 +55,6 @@ class TTS {
 
   isAValidVariant(accent, variant) {
     if (this.isAValidVoice(accent)) {
-      console.log(
-        variant,
-        this.#voices[accent],
-        variant <= this.#voices[accent] && variant > 0
-      )
       return variant <= this.#voices[accent] && variant > 0
     }
     return false

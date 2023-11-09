@@ -41,17 +41,8 @@ function config(message) {
   const { msg, userName } = message
   const words = msg.split(' ').map((word) => word.trim())
   const acce = normalize(words[ACC])
-  const vari = Math.ceil(Number(words[VAR]))
-  console.log(
-    `${userName} voz valida:${tts.isAValidVoice(
-      acce
-    )}, Variante valida: ${tts.isAValidVariant(
-      acce,
-      vari
-    )}, Difernte del por defecto: ${acce !== ttsAccent}`
-  )
+  const vari = Math.ceil(Number(words[VAR])) || 1
   if (tts.isAValidVoice(acce) && tts.isAValidVariant(acce, vari)) {
-    console.log(userName, words)
     TTSConfigVault.setConfig(userName, acce, !isNaN(vari) ? vari : 1)
   }
   return true
