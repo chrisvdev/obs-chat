@@ -13,7 +13,7 @@ export default function toTTS(message) {
   const { speak, userName } = message
   if (speak) {
     const { toRead, accent, variant } = speak
-    if (ttsAlwaysOn) tts.speak(`${userName} dice`, ttsAccent, ttsIndex)
+    if (ttsAlwaysOn) tts.speak(`${userName} dicé`, ttsAccent, ttsIndex)
     tts.speak(toRead, accent, variant)
   }
   return message
