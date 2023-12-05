@@ -29,6 +29,7 @@ import getVariable, {
   PATO_BOT,
   TTS_ALWAYS_ON
 } from '../lib/get_variable.js'
+import placeMessage7TVEmojis from '../middlewares/place_message_7tv_emojis.js'
 
 const channel = getVariable(CHANNEL)
 const patoBot = getVariable(PATO_BOT)
@@ -54,6 +55,7 @@ messageToRenderProcessor.useMiddleware(messageCleaner)
 messageToRenderProcessor.useMiddleware(filterHTMLTags)
 messageToRenderProcessor.useMiddleware(placeHearts)
 messageToRenderProcessor.useMiddleware(placeEmojis)
+messageToRenderProcessor.useMiddleware(placeMessage7TVEmojis)
 htmli && messageToRenderProcessor.useMiddleware(placeHTML)
 patoBot && messageToRenderProcessor.useMiddleware(patoBotMiddleware)
 messageToRenderProcessor.useMiddleware(toTTS)
