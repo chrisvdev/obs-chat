@@ -53,14 +53,11 @@ class SevenTVClient {
           url,
           method: 'GET'
         }).then((response) => {
-          console.log(response.data)
-
           const myEmotes = response.data.emote_set.emotes.map((emoji) =>
             apiDecouplerGlobal(emoji)
           )
 
           this.#seventvemotes = [...this.#seventvemotes, ...myEmotes]
-          console.log(this.#seventvemotes)
         })
       })
   }
