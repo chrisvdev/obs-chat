@@ -29,9 +29,9 @@ class SevenTVClient {
   }
 
   initialize() {
-    const baseUrl = 'https://7tv.io/v3'
+    const base7TVApiUrl = 'https://7tv.io/v3'
 
-    const url = baseUrl + '/emote-sets/global'
+    const url = base7TVApiUrl + '/emote-sets/global'
     axios({
       url,
       method: 'GET'
@@ -45,10 +45,8 @@ class SevenTVClient {
       .get(`https://api.twitch.tv/helix/users?login=${channel}`, config)
       .then(({ data }) => {
         data = data.data[0]
-
         const userId = data.id
-
-        const url = baseUrl + '/users/twitch/' + userId
+        const url = base7TVApiUrl + '/users/twitch/' + userId
         axios({
           url,
           method: 'GET'
