@@ -56,7 +56,6 @@ class SevenTVClient {
           const myEmotes = response.data.emote_set.emotes.map((emoji) =>
             apiDecouplerGlobal(emoji)
           )
-
           this.#seventvemotes = [...this.#seventvemotes, ...myEmotes]
         })
       })
