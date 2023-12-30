@@ -19,6 +19,6 @@ VITE_REDIRECT_URI=https://obs-chat.christianvillegas.com/&scope=chat%3Aread //on
 
 ### Use it
 
-in current build
+Go to the [project web page](https://chrisvdev.github.io/CVTalk/) 😉
 
 ...
