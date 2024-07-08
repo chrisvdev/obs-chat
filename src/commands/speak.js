@@ -80,8 +80,8 @@ function speak(message) {
       accent = normalize(words[ACCENT_OR_MODIFIER])
       if (!Number.isNaN(Number(words[VARIANT]))) {
         variant = Number(words[VARIANT])
-        toRead = words.slice(3).join(' ')
-      } else toRead = words.slice(2).join(' ')
+        toRead = words.slice(VARIANT + 1).join(' ')
+      } else toRead = words.slice(ACCENT_OR_MODIFIER + 1).join(' ')
     } else {
       toRead = msg.replace('!speak ', '')
       const config = ttsConfigVault.getConfig(userName)
@@ -90,6 +90,7 @@ function speak(message) {
         variant = config.variant
       }
     }
+    console.log(words, toRead)
     message.speak = {
       toRead: toRead.trim(),
       accent,
