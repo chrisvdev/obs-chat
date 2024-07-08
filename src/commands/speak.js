@@ -90,7 +90,6 @@ function speak(message) {
         variant = config.variant
       }
     }
-    console.log(words, toRead)
     message.speak = {
       toRead: toRead.trim(),
       accent,
