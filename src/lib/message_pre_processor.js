@@ -20,8 +20,9 @@ function apiDecoupler(rawObjMsg) {
     firstMsg: rawObjMsg.firstMsg,
     flags: rawObjMsg.flags,
     id: rawObjMsg.id,
-    mod: rawObjMsg.mod,
+    mod: rawObjMsg.mod === '1',
     vip: rawObjMsg.vip,
+    streamer: rawObjMsg.badges?.includes('broadcaster'),
     returningChatter: rawObjMsg.returningChatter,
     roomId: rawObjMsg.roomId,
     subscriber: rawObjMsg.subscriber,
@@ -55,6 +56,7 @@ class MessagePreProcessor {
         rawObjMsg[toCamelCase(key)] = value
       }
     })
+    console.log(rawObjMsg)
     return apiDecoupler(rawObjMsg)
   }
 

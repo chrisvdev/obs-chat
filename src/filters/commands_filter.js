@@ -1,5 +1,6 @@
 import { commandsContainer } from '../lib/containers.js'
 import TextToSpeak from '../commands/speak.js'
+import filterUsers from '../commands/filter_user.js'
 import getVariable, { CHAR_COMMANDS } from '../lib/get_variable.js'
 
 const charCommands = getVariable(CHAR_COMMANDS)?.split(',') || []
@@ -7,6 +8,8 @@ const charCommands = getVariable(CHAR_COMMANDS)?.split(',') || []
 commandsContainer.addCommand('!speak', TextToSpeak.speak)
 commandsContainer.addCommand('!speak -config', TextToSpeak.config)
 commandsContainer.addCommand('!speak -reset', TextToSpeak.reset)
+commandsContainer.addCommand('!iacaiate', filterUsers.addFilteredUser)
+commandsContainer.addCommand('!iahabla', filterUsers.removeFilteredUser)
 
 function isA3thPartyCommand(msg) {
   return !msg.includes('!hit @jp__is') && charCommands.includes(msg[0])

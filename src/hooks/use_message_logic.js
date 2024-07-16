@@ -4,7 +4,7 @@ import useConnectWebSocketToTwitchIRC from './use_connect_websocket_to_twitch_ir
 import messagePreProcessor from '../lib/message_pre_processor.js'
 import messageFilters from '../lib/massage_filters.js'
 import messageToRenderProcessor from '../lib/message_to_render_processor.js'
-import botFilter from '../filters/bot_filter.js'
+import usersFilter from '../filters/users_filter.js'
 import commandsFilter from '../filters/commands_filter.js'
 import isNotAMessage from '../filters/is_not_a_message.js'
 import ttsAlwaysOn from '../middlewares/tts_always_on.js'
@@ -14,6 +14,7 @@ import usernamePlacer from '../middlewares/username_placer.js'
 import renderCommands from '../middlewares/render_commands.js'
 import getMessageEmojis from '../middlewares/get_message_emojis.js'
 import linkRemover from '../middlewares/link_remover.js'
+import longWordsRemover from '../middlewares/long_words_remover.js'
 import preloadUserData from '../middlewares/avatar_placer.js'
 import messageCleaner from '../middlewares/message_cleaner.js'
 import speakMessageRender from '../middlewares/speak_message_render.js'
@@ -39,12 +40,13 @@ messagePreProcessor.setChannel(channel)
 messagePreProcessor.useMiddleware(getMessageEmojis)
 messagePreProcessor.useMiddleware(preloadUserData)
 messagePreProcessor.useMiddleware(linkRemover) // hay que arreglar
+messagePreProcessor.useMiddleware(longWordsRemover)
 messagePreProcessor.useMiddleware(antiGoose)
 messagePreProcessor.useMiddleware(usernamePlacer)
 messagePreProcessor.useMiddleware(action)
 
 messageFilters.addFilter(isNotAMessage)
-messageFilters.addFilter(botFilter)
+messageFilters.addFilter(usersFilter)
 messageFilters.addFilter(commandsFilter)
 
 messageToRenderProcessor.useMiddleware(ttsAlwaysOn)
