@@ -69,29 +69,25 @@ function reset({ userName }) {
 }
 
 function speak(message) {
+  // los uqe votaron que no, la tienen adentro - Sonny - 8/7/2024
   const { msg, userName } = message
 
   if (ttsEnabled) {
-    let accent = ttsAccent
-    let variant = ttsIndex || 1
-    let toRead = ''
-    const words = msg.split(' ').map((word) => word.trim())
-    if (isAnAccent(words[ACCENT_OR_MODIFIER])) {
-      accent = normalize(words[ACCENT_OR_MODIFIER])
-      if (!Number.isNaN(Number(words[VARIANT]))) {
-        variant = Number(words[VARIANT])
-        toRead = words.slice(VARIANT + 1).join(' ')
-      } else toRead = words.slice(ACCENT_OR_MODIFIER + 1).join(' ')
-    } else {
-      toRead = msg.replace('!speak ', '')
-      const config = ttsConfigVault.getConfig(userName)
-      if (config) {
-        accent = config.accent
-        variant = config.variant
+    const config = ttsConfigVault.getConfig(userName)
+    let accent = config ? config.accent : ttsAccent
+    let variant = config ? config.variant : ttsIndex || 1
+    const words = msg
+      .replace('!speak ', '')
+      .split(' ')
+      .map((word) => word.trim())
+    if (isAnAccent(words[0])) {
+      accent = normalize(String(words.splice(0, 1)))
+      if (!Number.isNaN(Number(words[0]))) {
+        variant = Number(words.splice(0, 1))
       }
     }
     message.speak = {
-      toRead: toRead.trim(),
+      toRead: words.join(' ').trim().replaceAll(':3', 'AliMoyi'),
       accent,
       variant
     }

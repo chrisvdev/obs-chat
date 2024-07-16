@@ -6,5 +6,8 @@ export default function placeHearts(message) {
       message.emotes = { ...message.emotes, ...afordiLove }
     } else message.emotes = afordiLove
   }
+  if (message.msg?.includes(':3')) {
+    message.msg = message.msg.replaceAll(':3', '😺')
+  }
   return message
 }
