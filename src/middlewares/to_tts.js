@@ -17,9 +17,13 @@ export default function toTTS(message) {
   const { speak, userName } = message
   if (speak) {
     const { toRead, accent, variant } = speak
+    const country = accent.split('-')[1].toLowerCase()
     if (ttsAlwaysOn && ttsMentions && lastUserName !== userName)
       tts.speak(`${userName} dicé`, ttsAccent, ttsIndex)
     tts.speak(toRead, accent, variant)
+    message.msg =
+      `<div style="display: flex; align-items: center; margin-right: .5rem;"><img src="https://flagcdn.com/${country}.svg" style="width: 1,5rem; height: 1rem; margin-right: .5rem;" > 📢 </div>` +
+      toRead
   }
   lastUserName = userName
   return message
