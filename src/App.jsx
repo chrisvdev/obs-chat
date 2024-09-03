@@ -3,9 +3,12 @@ import useMessageQueue from './hooks/use_message_queue.js'
 import Message from './components/Message.jsx'
 import StyledMessage from './components/StyleMessage.jsx'
 import getVariable, { RENDER, STYLE } from './lib/get_variable.js'
+import seventvclient from './lib/seventv_api.js'
 
 const render = getVariable(RENDER)
 const style = getVariable(STYLE)
+
+seventvclient.initialize()
 
 export default function App() {
   const cue = useMessageQueue()
