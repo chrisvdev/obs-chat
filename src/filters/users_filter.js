@@ -2,13 +2,12 @@ import getVariable, { BOTS, CHANNEL } from '../lib/get_variable'
 
 const channel = getVariable(CHANNEL)
 
-const bots = [
-  'nightbot',
-  'streamelements',
-  'el_pato_bot',
-  'afordibot',
-  ...getVariable(BOTS)?.split(',')
-]
+const userDefinedBots = getVariable(BOTS)?.split(',')
+const defaultBots = ['nightbot', 'streamelements', 'el_pato_bot', 'afordibot']
+
+const bots = userDefinedBots
+  ? [...userDefinedBots, ...defaultBots]
+  : defaultBots
 
 class BannedUsersContainer {
   #bannedUsers = []
